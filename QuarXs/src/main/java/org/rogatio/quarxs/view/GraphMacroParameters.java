@@ -19,7 +19,6 @@
  */
 package org.rogatio.quarxs.view;
 
-import org.xwiki.properties.annotation.PropertyMandatory;
 import org.xwiki.properties.annotation.PropertyDescription;
 
 public class GraphMacroParameters
@@ -29,8 +28,6 @@ public class GraphMacroParameters
     private String width;
 
     private String height;
-
-    // private String table;
 
     private String menu;
 
@@ -86,10 +83,6 @@ public class GraphMacroParameters
         return menu;
     }
 
-    // public String getTable() {
-    // return table;
-    // }
-
     @PropertyDescription("Show Data")
     public void setData(String data)
     {
@@ -101,11 +94,6 @@ public class GraphMacroParameters
     {
         this.menu = menu;
     }
-
-    // @PropertyDescription("Show Table")
-    // public void setTable(String table) {
-    // this.table = table;
-    // }
 
     @PropertyDescription("Width")
     public void setWidth(String width)

@@ -1,8 +1,12 @@
 package org.rogatio.quarxs.view;
 
+import org.rogatio.quarxs.Edge;
 import org.rogatio.quarxs.Graph;
+import org.rogatio.quarxs.Node;
 import org.xwiki.component.annotation.Component;
 import org.xwiki.script.service.ScriptService;
+
+import com.xpn.xwiki.objects.BaseObject;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,6 +36,19 @@ public class GraphScriptService implements ScriptService {
 		this.graph.setFilter(jsonFilter);
 	}
 
+	public Edge getEdge(String prettyId) {
+        return this.graph.getEdge(prettyId);
+    }
+	
+	public Node getNode(String prettyId) {
+	    return this.graph.getNode(prettyId);
+	}
+	
+	public BaseObject getData(String prettyId) {
+	    BaseObject bo = this.graph.getData(prettyId);
+	    return bo;
+	}
+	
 	public void setMaster(String nodeIdentity) {
 		this.graph.setMasterNode(nodeIdentity);
 	}

@@ -81,12 +81,12 @@ public class GraphEventListener implements EventListener
     private boolean documentContainsNodeObject(XWikiDocument doc)
     {
         EntityReference entRef = doc.resolveClassReference(Constants.SPACE + "." + Node.CLASS + "Class");
-        
+
         List<BaseObject> list = doc.getXObjects(entRef);
-        
-        if (list!=null) {
-            if (list.size()!=0) {
-                return true;    
+
+        if (list != null) {
+            if (list.size() != 0) {
+                return true;
             }
         }
         return false;
@@ -99,13 +99,10 @@ public class GraphEventListener implements EventListener
         XWikiDocument doc = (XWikiDocument) source;
         XWikiContext context = (XWikiContext) data;
 
-        // System.out.println("GraphListener: " + doc.getName());
-
         // Is Document created?
         if (event instanceof DocumentCreatedEvent) {
             // Check if a Graph Node exists. When not then create one
-//            System.out.println("want to create");
-            System.out.println(doc.getName()+" contains Node: "+documentContainsNodeObject(doc));
+            System.out.println(doc.getName() + " contains Node: " + documentContainsNodeObject(doc));
             if (!documentContainsNodeObject(doc)) {
                 createNode(doc, context);
             }
@@ -116,26 +113,28 @@ public class GraphEventListener implements EventListener
             BaseObject node = getNodeObject(doc);
             if (node != null) {
                 String prettyId = node.getStringValue("prettyid");
-                
-                if (prettyId!=null) {
+
+                if (prettyId != null) {
                     if (prettyId.trim().equals("")) {
-                        System.out.println("ERROR: PrettyId of Node is not set. Force Change to Document '"+doc.getName()+"' to create one."); 
+                        System.out.println("ERROR: PrettyId of Node is not set. Force Change to Document '"
+                            + doc.getName() + "' to create one.");
                     }
                 }
-                
+
                 String label = node.getStringValue("label");
                 String guid = node.getGuid();
                 String nodeDocName = PrettyIdConverter.getDocumentName(prettyId);
-                
-                if (nodeDocName==null) {
-                    System.out.println("ERROR: DocumentName from PrettyId could not be found in Node '"+prettyId+"'");
+
+                if (nodeDocName == null) {
+                    System.out.println("ERROR: DocumentName from PrettyId could not be found in Node '" + prettyId
+                        + "'");
                 }
-                
+
                 String nodeDocSpace = PrettyIdConverter.getSpace(prettyId);
-                if (nodeDocSpace==null) {
-                    System.out.println("ERROR: Space from PrettyId could not be found in Node '"+prettyId+"'");
+                if (nodeDocSpace == null) {
+                    System.out.println("ERROR: Space from PrettyId could not be found in Node '" + prettyId + "'");
                 }
-                
+
                 String docName = doc.getDocumentReference().getName();
                 String docSpace = doc.getDocumentReference().getLastSpaceReference().getName();
                 // Rename PrettyId if Document-Name is not correct
@@ -153,7 +152,8 @@ public class GraphEventListener implements EventListener
         }
 
         // is document created or changed?
-        if (((event instanceof DocumentUpdatedEvent) || (event instanceof DocumentCreatedEvent))&&documentContainsNodeObject(doc)) {
+        if (((event instanceof DocumentUpdatedEvent) || (event instanceof DocumentCreatedEvent))
+            && documentContainsNodeObject(doc)) {
 
             EdgeType edgeWikiType = getEdgeTypeWikiRelation();
 
@@ -231,9 +231,7 @@ public class GraphEventListener implements EventListener
         }
 
         // Is Document changed?
-        if ((event instanceof DocumentUpdatedEvent)) {// ||(event instanceof
-                                                      // AbstractDocumentEvent))
-                                                      // {
+        if ((event instanceof DocumentUpdatedEvent)) {
             EntityReference entRef = doc.resolveClassReference(Constants.SPACE + "." + Node.CLASS + "Class");
 
             /**
@@ -256,20 +254,70 @@ public class GraphEventListener implements EventListener
                                 // not already exists
                                 logger.info("DataObject '" + entity + "' created for Node '"
                                     + obj.getStringValue("label") + "'.");
+                                System.out.println("DataObject '" + entity + "' created for Node '"
+                                    + obj.getStringValue("label") + "'.");
                                 BaseObject dataObject =
-                                    this.createDataObject(doc, context, entity, obj.getStringValue("prettyid"));
-                                // If dataObject exists, check if prettyid is
-                                // correct
-                                // System.out.println(dataObject);
+                                    this.createDataObjectNode(doc, context, entity, obj.getStringValue("prettyid"));
+                                // If dataObject exists, check if prettyid is correct
                                 if (dataObject != null) {
                                     String id = dataObject.getStringValue("node");
-                                    String label = PrettyIdConverter.getNodeName(id);
+                                    String label = PrettyIdConverter.getName(id);
                                     if (!label.equals(nodeLabel)) {
-                                        // System.out.println("Label DataNode different");
-                                        dataObject.set("node", PrettyIdConverter.replaceNodeName(id, nodeLabel),
+                                        dataObject.set("node", PrettyIdConverter.replaceName(id, nodeLabel),
                                             context);
                                         try {
-                                            // System.out.println("Save");
+                                            context.getWiki().saveDocument(doc, context);
+                                        } catch (XWikiException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            entRef = doc.resolveClassReference(Constants.SPACE + "." + Edge.CLASS + "Class");
+            /**
+             * Create Data-Object for Edge if it not exists
+             */
+            // Do the Page contain a Edge?
+            if (doc.getXObjects(entRef) != null) {
+//                System.out.println("Size: "+doc.getXObjects(entRef).size());
+                // When yes, then get Edges
+                for (BaseObject obj : doc.getXObjects(entRef)) {
+                    if (obj != null) {
+                        String edgeLabel = obj.getStringValue("label");
+//                        System.out.println("label: "+edgeLabel);
+                        // Edge contains EdgeType
+                        if (!obj.getStringValue("edgetype").equals("")) {
+                            // Get EdgeTypeObject from PrettyId
+                           EdgeType edgeType = getEdgeType(obj.getStringValue("edgetype"));
+//                           System.out.println("EdgeType: "+edgeType.getName());
+                            // If EdgeType contains DataEntity
+                            String entity = edgeType.getEntity();
+                            if (!entity.equals("")) {
+                                // Create Object-Instance of DataEntity if it
+                                // not already exists
+                                logger.info("DataObject '" + entity + "' created for Edge '"
+                                    + obj.getStringValue("prettyid") + "'.");
+                                System.out.println("DataObject '" + entity + "' created for Edge '"
+                                    + obj.getStringValue("prettyid") + "'.");
+                                BaseObject dataObject =
+                                    this.createDataObjectEdge(doc, context, entity, obj.getStringValue("prettyid"));
+                                // If dataObject exists, check if prettyid is correct
+                                
+//                                System.out.println(obj.getStringValue("prettyid")+" is Data-created to "+dataObject);
+                                
+                                if (dataObject != null) {
+                                    String id = dataObject.getStringValue("edge");
+                                    
+//                                    String label = PrettyIdConverter.getName(id);
+                                    if (!obj.getStringValue("prettyid").equals(id)) {
+                                        dataObject.set("edge", PrettyIdConverter.replaceName(id, edgeLabel),
+                                            context);
+                                        try {
                                             context.getWiki().saveDocument(doc, context);
                                         } catch (XWikiException e) {
                                             e.printStackTrace();
@@ -301,7 +349,7 @@ public class GraphEventListener implements EventListener
                                 // If Source-Node is attached
                                 if (edge.getSource() != null) {
                                     String guid = PrettyIdConverter.getGuid(edge.getSource().getPrettyId()).trim();
-                                    String label = PrettyIdConverter.getNodeName(edge.getSource().getPrettyId()).trim();
+                                    String label = PrettyIdConverter.getName(edge.getSource().getPrettyId()).trim();
                                     // check if Source-Node is node in document
                                     if (guid.equals(nodeGuid)) {
                                         // if node-label is not the same with
@@ -317,7 +365,7 @@ public class GraphEventListener implements EventListener
                                                         // replace prettyid in
                                                         // edge
                                                         baseObject.set("nodesource",
-                                                            PrettyIdConverter.replaceNodeName(prettyidNode, nodeLabel),
+                                                            PrettyIdConverter.replaceName(prettyidNode, nodeLabel),
                                                             context);
                                                         try {
                                                             // save edge in
@@ -343,7 +391,7 @@ public class GraphEventListener implements EventListener
                                 }
                                 if (edge.getTarget() != null) {
                                     String guid = PrettyIdConverter.getGuid(edge.getTarget().getPrettyId()).trim();
-                                    String label = PrettyIdConverter.getNodeName(edge.getTarget().getPrettyId()).trim();
+                                    String label = PrettyIdConverter.getName(edge.getTarget().getPrettyId()).trim();
                                     if (guid.equals(nodeGuid)) {
                                         if (!label.equals(nodeLabel)) {
                                             EntityReference refEdge = doc.resolveClassReference("QuarXs.EdgeClass");
@@ -352,7 +400,7 @@ public class GraphEventListener implements EventListener
                                                     if (edge.getPrettyId()
                                                         .equals(baseObject.getStringValue("prettyid"))) {
                                                         baseObject.set("nodetarget",
-                                                            PrettyIdConverter.replaceNodeName(prettyidNode, nodeLabel),
+                                                            PrettyIdConverter.replaceName(prettyidNode, nodeLabel),
                                                             context);
                                                         try {
                                                             XWikiContext wikicontext =
@@ -410,7 +458,6 @@ public class GraphEventListener implements EventListener
 
             for (Object edgeTypeObj : componentManagerProvider.get().getInstanceList(EdgeType.class)) {
                 EdgeType edgeType = (EdgeType) edgeTypeObj;
-//                System.out.println("   Check: "+edgeType.getName());
                 if (edgeType.getName().equals("DocumentRelation")) {
                     return edgeType;
                 }
@@ -464,8 +511,6 @@ public class GraphEventListener implements EventListener
 
             obj.set("edgetype", edgeWikiType.getPrettyId(), context);
 
-//            System.out.println("Add Edge "+obj.toXMLString()+" to Document "+doc.getName());
-            
             if (targetContainsNode) {
                 context.getWiki().saveDocument(doc, context);
             }
@@ -504,7 +549,46 @@ public class GraphEventListener implements EventListener
         }
     }
 
-    private BaseObject createDataObject(XWikiDocument doc, XWikiContext context, String dataClass, String nodePrettyId)
+    private BaseObject createDataObjectEdge(XWikiDocument doc, XWikiContext context, String dataClass, String edgePrettyId)
+    {
+        EntityReference entRefData = doc.resolveClassReference(dataClass);
+
+        if (doc == null) {
+            return null;
+        }
+
+        if (doc.getXObjects(entRefData) != null) {
+            for (BaseObject baseObject : doc.getXObjects(entRefData)) {
+                if (baseObject == null) {
+                    return null;
+                }
+
+                if (baseObject.getStringValue("edge") == null) {
+                    return null;
+                }
+                if (baseObject.getStringValue("edge").equals("")) {
+                    return null;
+                }
+                if (PrettyIdConverter.getGuid(baseObject.getStringValue("edge")).equals(
+                    PrettyIdConverter.getGuid(edgePrettyId))) {
+                    return baseObject;
+                }
+
+            }
+        }
+
+        try {
+            int objectIndex = doc.createXObject(entRefData, context);
+            BaseObject objData = doc.getXObjects(entRefData).get(objectIndex);
+            objData.set("edge", edgePrettyId, context);
+            context.getWiki().saveDocument(doc, context);
+        } catch (XWikiException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    private BaseObject createDataObjectNode(XWikiDocument doc, XWikiContext context, String dataClass, String nodePrettyId)
     {
         EntityReference entRefData = doc.resolveClassReference(dataClass);
 
@@ -549,9 +633,6 @@ public class GraphEventListener implements EventListener
         try {
             for (Object edgeTypeObj : componentManagerProvider.get().getInstanceList(Edge.class)) {
                 Edge edge = (Edge) edgeTypeObj;
-                // list.add(edge);
-                // QueryManager queryManager = (QueryManager)
-                // componentManagerProvider.get().getInstance(QueryManager.class);
                 Edge edgeFromBo = ObjectQuery.getEdge(edge.getPrettyId(), queryManager, context);
                 list.add(edgeFromBo);
             }
@@ -610,6 +691,21 @@ public class GraphEventListener implements EventListener
                 NodeType nodeType = (NodeType) nodeTypeObj;
                 if (nodeType.getPrettyId().equals(prettyId)) {
                     return nodeType;
+                }
+            }
+        } catch (ComponentLookupException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    private EdgeType getEdgeType(String prettyId)
+    {
+        try {
+            for (Object edgeTypeObj : componentManagerProvider.get().getInstanceList(EdgeType.class)) {
+                EdgeType edgeType = (EdgeType) edgeTypeObj;
+                if (edgeType.getPrettyId().equals(prettyId)) {
+                    return edgeType;
                 }
             }
         } catch (ComponentLookupException e) {

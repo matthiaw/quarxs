@@ -77,9 +77,12 @@ public class EdgeTypeClassBuilder implements WikiComponentBuilder {
 
 				n.setGuid(obj.getGuid());
 				n.setName(obj.getStringValue("name"));
+				n.setEntity(obj.getStringValue("entity"));
 				n.setDefaultLabel(obj.getStringValue("defaultlabel"));
 				n.setPrettyId(doc.getSpace() + "." + doc.getName() + "." + obj.getStringValue("name") + " (" + obj.getGuid() + ")");
 				n.setConnection(obj.getStringValue("connection"));
+				n.setWidth(Integer.parseInt(obj.getStringValue("width")));
+				n.setColor(obj.getStringValue("color"));
 				
 				n.setAuthorReference(doc.getAuthorReference());
 				n.setRoleHint(roleHint);

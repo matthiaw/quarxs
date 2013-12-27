@@ -49,6 +49,7 @@ public class DefaultNode implements Node {
 	}
 
 	public void setType(NodeType type) {
+//	    System.out.println(label+": "+type);
 		this.type = type;
 	}
 

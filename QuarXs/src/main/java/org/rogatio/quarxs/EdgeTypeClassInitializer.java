@@ -46,6 +46,15 @@ public class EdgeTypeClassInitializer extends AbstractMandatoryDocumentInitializ
 	public static final String FIELD_CONNECTION = "connection";
 	public static final String FIELDPN_CONNECTION = "Connection";
 
+	public static final String FIELD_WIDTH = "width";
+    public static final String FIELDPN_WIDTH = "Width";
+    
+    public static final String FIELD_COLOR= "color";
+    public static final String FIELDPN_COLOR = "Color";
+    
+    public static final String FIELD_ENTITY = "entity";
+    public static final String FIELDPN_ENTITY = "Entity";
+	
 	/**
 	 * Used to bind a class to a document sheet.
 	 */
@@ -81,6 +90,9 @@ public class EdgeTypeClassInitializer extends AbstractMandatoryDocumentInitializ
 		needsUpdate |= baseClass.addTextField(FIELD_LABEL, FIELDPN_LABEL, 30);
 		needsUpdate |= baseClass.addTextField(FIELD_PRETTYID, FIELDPN_PRETTYID, 30);
 		needsUpdate |= baseClass.addStaticListField(FIELD_CONNECTION, FIELDPN_CONNECTION, "Related|Unidirectional|Bidirectional");
+		needsUpdate |= baseClass.addTextField(FIELD_WIDTH, FIELDPN_WIDTH, 30);
+		needsUpdate |= baseClass.addTextField(FIELD_COLOR, FIELDPN_COLOR, 30);
+		needsUpdate |= baseClass.addTextField(FIELD_ENTITY, FIELDPN_ENTITY, 30);
 		
 		// Add missing document fields
 		needsUpdate |= setClassDocumentFields(document, EdgeType.CLASS + "Class");

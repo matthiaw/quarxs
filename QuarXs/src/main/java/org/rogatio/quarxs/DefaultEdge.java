@@ -7,155 +7,186 @@ import org.xwiki.model.reference.DocumentReference;
 
 import com.xpn.xwiki.doc.XWikiDocument;
 
-public class DefaultEdge implements Edge {
+public class DefaultEdge implements Edge
+{
 
-	private String roleHint;
-	private XWikiDocument xwikiDocument;
-	private DocumentReference documentReference;
-	private DocumentReference authorReference;
-	private Node source;
-	private Node target;
+    private String roleHint;
 
-	public Node getSource() {
-		return source;
-	}
+    private XWikiDocument xwikiDocument;
 
-	public void setSource(Node source) {
-		this.source = source;
-	}
+    private DocumentReference documentReference;
 
-	public Node getOpposite(Node node) {
-		if (this.getSource().getPrettyId().equals(node.getPrettyId())) {
-			return this.getTarget();
-		}
-		if (this.getTarget().getPrettyId().equals(node.getPrettyId())) {
-			return this.getSource();
-		}
-		return null;
-	}
+    private DocumentReference authorReference;
 
-	public boolean contains(Node node) {
-		if (node == null) {
-			return false;
-		}
-		if (this.getSource() != null) {
-			if (this.getSource().getPrettyId().equals(node.getPrettyId())) {
-				return true;
-			}
-		}
-		if (this.getTarget() != null) {
-			if (this.getTarget().getPrettyId().equals(node.getPrettyId())) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private Node source;
 
-	public Node getTarget() {
-		return target;
-	}
+    private Node target;
 
-	public void setTarget(Node target) {
-		this.target = target;
-	}
+    public Node getSource()
+    {
+        return source;
+    }
 
-	public XWikiDocument getDocument() {
-		return xwikiDocument;
-	}
+    public void setSource(Node source)
+    {
+        this.source = source;
+    }
 
-	public void setDocument(XWikiDocument xwikiDocument) {
-		this.xwikiDocument = xwikiDocument;
-	}
+    public Node getOpposite(Node node)
+    {
+        if (this.getSource().getPrettyId().equals(node.getPrettyId())) {
+            return this.getTarget();
+        }
+        if (this.getTarget().getPrettyId().equals(node.getPrettyId())) {
+            return this.getSource();
+        }
+        return null;
+    }
 
-	public DocumentReference getDocumentReference() {
-		return documentReference;
-	}
+    public boolean contains(Node node)
+    {
+        if (node == null) {
+            return false;
+        }
+        if (this.getSource() != null) {
+            if (this.getSource().getPrettyId().equals(node.getPrettyId())) {
+                return true;
+            }
+        }
+        if (this.getTarget() != null) {
+            if (this.getTarget().getPrettyId().equals(node.getPrettyId())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public DocumentReference getAuthorReference() {
-		return authorReference;
-	}
+    public Node getTarget()
+    {
+        return target;
+    }
 
-	public void setRoleHint(String roleHint) {
-		this.roleHint = roleHint;
-	}
+    public void setTarget(Node target)
+    {
+        this.target = target;
+    }
 
-	public void setDocumentReference(DocumentReference documentReference) {
-		this.documentReference = documentReference;
-	}
+    public XWikiDocument getDocument()
+    {
+        return xwikiDocument;
+    }
 
-	public void setAuthorReference(DocumentReference authorReference) {
-		this.authorReference = authorReference;
-	}
+    public void setDocument(XWikiDocument xwikiDocument)
+    {
+        this.xwikiDocument = xwikiDocument;
+    }
 
-	private EdgeType type;
+    public DocumentReference getDocumentReference()
+    {
+        return documentReference;
+    }
 
-	public EdgeType getType() {
-		return type;
-	}
+    public DocumentReference getAuthorReference()
+    {
+        return authorReference;
+    }
 
-	public void setType(EdgeType type) {
-		this.type = type;
-	}
+    public void setRoleHint(String roleHint)
+    {
+        this.roleHint = roleHint;
+    }
 
-	public String getRoleHint() {
-		return roleHint;
-	}
+    public void setDocumentReference(DocumentReference documentReference)
+    {
+        this.documentReference = documentReference;
+    }
 
-	public WikiComponentScope getScope() {
-		return WikiComponentScope.WIKI;
-	}
+    public void setAuthorReference(DocumentReference authorReference)
+    {
+        this.authorReference = authorReference;
+    }
 
-	private String label;
+    private EdgeType type;
 
-	public DefaultEdge() {
-	}
+    public EdgeType getType()
+    {
+        return type;
+    }
 
-	public String getLabel() {
+    public void setType(EdgeType type)
+    {
+        this.type = type;
+    }
 
-		if (label == null) {
-			if (this.getType() != null) {
-				return this.getType().getDefaultLabel();
-			}
-		}
+    public String getRoleHint()
+    {
+        return roleHint;
+    }
 
-		if (label.equals("")) {
-			if (this.getType() != null) {
-				return this.getType().getDefaultLabel();
-			}
-		}
+    public WikiComponentScope getScope()
+    {
+        return WikiComponentScope.WIKI;
+    }
 
-		return label;
-	}
+    private String label;
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    public DefaultEdge()
+    {
+    }
 
-	@Override
-	public Type getRoleType() {
-		return Edge.class;
-	}
+    public String getLabel()
+    {
 
-	private String guid;
+        if (label == null) {
+            if (this.getType() != null) {
+                return this.getType().getDefaultLabel();
+            }
+        }
 
-	public void setGuid(String id) {
-		this.guid = id;
-	}
+        if (label.equals("")) {
+            if (this.getType() != null) {
+                return this.getType().getDefaultLabel();
+            }
+        }
 
-	private String prettyId;
+        return label;
+    }
 
-	@Override
-	public String getPrettyId() {
-		return prettyId;
-	}
+    public void setLabel(String label)
+    {
+        this.label = label;
+    }
 
-	public void setPrettyId(String prettyId) {
-		this.prettyId = prettyId;
-	}
+    @Override
+    public Type getRoleType()
+    {
+        return Edge.class;
+    }
 
-	@Override
-	public String getGuid() {
-		return guid;
-	}
+    private String guid;
+
+    public void setGuid(String id)
+    {
+        this.guid = id;
+    }
+
+    private String prettyId;
+
+    @Override
+    public String getPrettyId()
+    {
+        return prettyId;
+    }
+
+    public void setPrettyId(String prettyId)
+    {
+        this.prettyId = prettyId;
+    }
+
+    @Override
+    public String getGuid()
+    {
+        return guid;
+    }
 
 }

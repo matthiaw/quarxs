@@ -154,4 +154,40 @@ public class DefaultNodeType implements NodeType {
 		return entity;
 	}
 
+private int width;
+    
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public void setWidth(int width)
+    {
+        if (width < 1) {
+            width = 1;
+        }
+        this.width = width;
+    }
+
+    public String getColor()
+    {
+        
+        if (color==null) {
+            return "black";
+        }
+        
+        if (color.equals("")) {
+            return "black";
+        }
+        
+        return color;
+    }
+
+    public void setColor(String color)
+    {
+        this.color = color;
+    }
+
+    private String color;
+	
 }

@@ -2,6 +2,8 @@ package org.rogatio.quarxs;
 
 import org.xwiki.component.annotation.Role;
 
+import com.xpn.xwiki.objects.BaseObject;
+
 @Role /* annotation used for declaring the service our component provides */
 public interface Graph
 {
@@ -15,9 +17,15 @@ public interface Graph
 	
     public void remove(Node node);
     
+    public Edge getEdge(String prettyid);
+    
+    public Node getNode(String prettyid);
+    
     public void createEdge(String prettyidConnection);
     
     public void setMasterNode(String prettyidMaster);
+    
+    public BaseObject getData(String prettyId);
     
     public String calculate(int width, int height);
     

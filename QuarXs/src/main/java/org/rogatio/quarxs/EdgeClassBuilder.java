@@ -89,6 +89,9 @@ public class EdgeClassBuilder implements WikiComponentBuilder {
 							edge.setDocument(doc);
 
 							EdgeType et = ObjectQuery.getEdgeType(obj.getStringValue("edgetype"), queryManager);
+//							if (et==null) {
+//							    System.out.println("EdgeType is NULL.");   
+//							}
 							edge.setType(et);
 
 							obj.set("prettyid", edge.getPrettyId(), getXWikiContext());

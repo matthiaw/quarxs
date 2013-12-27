@@ -14,7 +14,13 @@ public interface EdgeType extends WikiComponent{
 	
 	public String getName();
 	
+	public String getEntity();
+	
 	public String getConnection();
+	
+	public int getWidth();
+	
+	public String getColor();
 	
 	public String getDefaultLabel();
 	

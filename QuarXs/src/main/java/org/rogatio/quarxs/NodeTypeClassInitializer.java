@@ -49,6 +49,12 @@ public class NodeTypeClassInitializer extends AbstractMandatoryDocumentInitializ
 	public static final String FIELD_ENTITY = "entity";
 	public static final String FIELDPN_ENTITY = "Entity";
 	
+	public static final String FIELD_WIDTH = "width";
+    public static final String FIELDPN_WIDTH = "Width";
+    
+    public static final String FIELD_COLOR= "color";
+    public static final String FIELDPN_COLOR = "Color";
+	
 	/**
 	 * Used to bind a class to a document sheet.
 	 */
@@ -83,7 +89,9 @@ public class NodeTypeClassInitializer extends AbstractMandatoryDocumentInitializ
 		needsUpdate |= baseClass.addTextField(FIELD_ICONURL, FIELDPN_ICONURL, 30);
 		needsUpdate |= baseClass.addTextField(FIELD_PRETTYID, FIELDPN_PRETTYID, 30);
 		needsUpdate |= baseClass.addTextField(FIELD_ENTITY, FIELDPN_ENTITY, 30);
-
+		needsUpdate |= baseClass.addTextField(FIELD_WIDTH, FIELDPN_WIDTH, 30);
+        needsUpdate |= baseClass.addTextField(FIELD_COLOR, FIELDPN_COLOR, 30);
+		
 		// Add missing document fields
 		needsUpdate |= setClassDocumentFields(document, NodeType.CLASS+"Class");
 

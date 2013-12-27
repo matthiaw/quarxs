@@ -22,4 +22,8 @@ public interface NodeType extends WikiComponent{
 	
 	public boolean hasIcon();
 	
+	public int getWidth();
+    
+    public String getColor();
+	
 }

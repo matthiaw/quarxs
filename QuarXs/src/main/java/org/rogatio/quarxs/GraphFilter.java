@@ -3,6 +3,11 @@ package org.rogatio.quarxs;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+/**
+ * Data-Handling for Filtering a graph with JSON
+ * 
+ * @version $Id$
+ */
 public class GraphFilter {
 
 	private String space;

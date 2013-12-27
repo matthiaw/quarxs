@@ -5,34 +5,46 @@ import org.xwiki.component.wiki.WikiComponent;
 import com.xpn.xwiki.doc.XWikiDocument;
 
 /**
- *
-= Nodes = 
-{{groovy}}
-   import org.rogatio.quarxs.Node;
-   for (Node node : services.component.getComponentManager().getInstanceList(Node.class)) {
-      println("== "+node.getLabel() +" ==")
-      println("**Typ:** "+node.getType().getName() )
-      if (node.getType().hasIcon()) {
-         println("**Icon:** {{html}}<img src='"+node.getType().getIconUrl()+"' width='32px'>{{/html}}" )
-      }
-   }
-{{/groovy}}
+ * Node Interface Class
  * 
- * @author Matthias Wegner
- * 
+ * @version $Id$
  */
-public interface Node extends WikiComponent {
+public interface Node extends WikiComponent
+{
 
-	public static final String CLASS = "Node";
+    /**
+     * Descriptor for NodeClass
+     */
+    public static final String CLASS = "Node";
 
-	public String getPrettyId();
+    /**
+     * Unified Id which hold the Space, DocumentName, NodeLabel and GUID of XObject
+     * @return
+     */
+    public String getPrettyId();
 
-	public String getGuid();
+    /**
+     * GUID of the XObject
+     * @return
+     */
+    public String getGuid();
 
-	public String getLabel();
+    /**
+     * Label of the Node. If on creation no Label is given the Page-Name is set as Label
+     * @return
+     */
+    public String getLabel();
 
-	public XWikiDocument getDocument();
-	
-	public NodeType getType();
+    /**
+     * Document which holds the node
+     * @return
+     */
+    public XWikiDocument getDocument();
+
+    /**
+     * NodeType which defines the Node-Style and Node-Data-Model
+     * @return
+     */
+    public NodeType getType();
 
 }

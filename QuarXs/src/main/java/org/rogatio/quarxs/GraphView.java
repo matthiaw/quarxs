@@ -47,6 +47,11 @@ import y.view.MagnifierViewMode;
 import y.view.NodeRealizer;
 import y.view.ViewMode;
 
+/**
+ * This class is the graph layouting core of the framework.
+ * 
+ * @version $Id$
+ */
 public class GraphView extends JPanel
 {
 
@@ -60,12 +65,24 @@ public class GraphView extends JPanel
      */
     private Graph2DView view;
 
+    /**
+     * Mapping of org.rogatio.quarxs.Node to the prettyId
+     */
     private Hashtable<String, org.rogatio.quarxs.Node> quarxsNodes;
 
+    /**
+     * Mapping of y.base.Node to the prettyId
+     */
     private Hashtable<String, y.base.Node> yworksNodes;
 
+    /**
+     * Mapping of org.rogatio.quarxs.Edge to the prettyId
+     */
     private Hashtable<String, org.rogatio.quarxs.Edge> quarxsEdges;
 
+    /**
+     * Mapping of y.base.Edge to the prettyId
+     */
     private Hashtable<String, y.base.Edge> yworksEdges;
 
     /**
@@ -144,11 +161,7 @@ public class GraphView extends JPanel
     public GraphView()
     {
         super();
-//        try {
-            init();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        init();
     }
 
     /**
@@ -203,89 +216,15 @@ public class GraphView extends JPanel
     }
 
     /**
-     * Test-Panel which is used to evaluate the Script-Generation
-     * 
-     * @param args
+     * Master-Node defines the Node which is bound to the displaying wiki-document
      */
-    public static void main(String[] args)
-    {
-        JFrame frame = new JFrame("Graph");
-        int h = 240;
-        int w = 320;
-
-        frame.setMinimumSize(new Dimension(w, h));
-        frame.setPreferredSize(new Dimension(w, h));
-        ((JFrame) frame).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        GraphView g = new GraphView();
-        g.addLayout();
-        g.setDimension(w, h);
-        g.setNodeSize(30);
-        g.setFontSize(12);
-
-        DefaultNodeType nt = new DefaultNodeType();
-        nt.setName("Default");
-        nt.setIconUrl("https://cdn1.iconfinder.com/data/icons/Capital_Icon_Suite/PNG/File%20Types/Text%20Document-Default.png");
-        nt.setPrettyId("Main.Test.Default (179e7478-161e-4b3d-87fb-339fe746929e)");
-        // g.addNodeType(nt);
-
-        org.rogatio.quarxs.DefaultNode nq1 = new org.rogatio.quarxs.DefaultNode();
-        nq1.setLabel("Node1Label");
-        nq1.setPrettyId("Main.Test.Node1Label (9653d118-406e-4fab-85fe-9372fcd55453)");
-        nq1.setType(nt);
-        g.addNode(nq1);
-
-        org.rogatio.quarxs.DefaultNode nq2 = new org.rogatio.quarxs.DefaultNode();
-        nq2.setLabel("XX");
-        nq2.setPrettyId("X.X.XX");
-        nq2.setType(nt);
-        g.addNode(nq2);
-
-        org.rogatio.quarxs.DefaultNode nq3 = new org.rogatio.quarxs.DefaultNode();
-        nq3.setLabel("YY");
-        nq3.setPrettyId("Y.Y.YY");
-        nq3.setType(nt);
-        g.addNode(nq3);
-
-        DefaultEdgeType et = new DefaultEdgeType();
-        et.setConnection("Bidirectional");
-        et.setName("Egal");
-
-        org.rogatio.quarxs.DefaultEdge e1 = new org.rogatio.quarxs.DefaultEdge();
-        e1.setPrettyId("A.A.A");
-        e1.setSource(nq1);
-        e1.setTarget(nq2);
-        e1.setType(et);
-        e1.setLabel("Test 1");
-        g.addEdge(e1);
-
-        org.rogatio.quarxs.DefaultEdge e2 = new org.rogatio.quarxs.DefaultEdge();
-        e2.setPrettyId("B.B.B");
-        e2.setSource(nq2);
-        e2.setTarget(nq3);
-        e2.setType(et);
-        e2.setLabel("Test Test Test 2");
-        g.addEdge(e2);
-
-        org.rogatio.quarxs.DefaultEdge e3 = new org.rogatio.quarxs.DefaultEdge();
-        e3.setPrettyId("C.C.C");
-        e3.setLabel("Test 3");
-        e3.setSource(nq1);
-        e3.setTarget(nq3);
-        e3.setType(et);
-        g.addEdge(e3);
-
-        // g.resizeNodes();
-        g.calculate("Hierarchic");
-
-        System.out.println(g.getScript());
-
-        frame.add(g);
-        frame.setVisible(true);
-    }
-
     private org.rogatio.quarxs.Node masterNode;
 
+    /**
+     * Set the Master-Node of the displayed graph
+     * 
+     * @param node
+     */
     public void setMaster(org.rogatio.quarxs.Node node)
     {
         masterNode = node;
@@ -316,23 +255,39 @@ public class GraphView extends JPanel
         this.nodeSize = nodeSize;
     }
 
-    public boolean containsEdge(org.rogatio.quarxs.Node source, org.rogatio.quarxs.Node target) {        
+    /**
+     * Checks if Edge with Source-Node and Target-Node exists in graph
+     * 
+     * @param source
+     * @param target
+     * @return
+     */
+    public boolean containsEdge(org.rogatio.quarxs.Node source, org.rogatio.quarxs.Node target)
+    {
         for (Edge edge : getEdges()) {
-            if (edge.getSource().getPrettyId().equals(source.getPrettyId())&&edge.getTarget().getPrettyId().equals(target.getPrettyId())) {
+            if (edge.getSource().getPrettyId().equals(source.getPrettyId())
+                && edge.getTarget().getPrettyId().equals(target.getPrettyId())) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
-    public boolean containsEdge(org.rogatio.quarxs.Edge edge) {
+
+    /**
+     * Checks if edge exists in graph
+     * 
+     * @param edge
+     * @return
+     */
+    public boolean containsEdge(org.rogatio.quarxs.Edge edge)
+    {
         if (quarxsEdges.containsKey(edge.getPrettyId())) {
             return true;
         }
         return false;
     }
-    
+
     /**
      * Add an Edge to Graph and create a YEdge
      * 
@@ -344,7 +299,6 @@ public class GraphView extends JPanel
         org.rogatio.quarxs.Node source = edge.getSource();
         org.rogatio.quarxs.Node target = edge.getTarget();
 
-        // TODO NULL
         if (source == null) {
             System.err.println("Source-Node in edge '" + edge.getPrettyId() + "' not exists to create Edge");
             return null;
@@ -356,6 +310,10 @@ public class GraphView extends JPanel
 
         quarxsEdges.put(edge.getPrettyId(), edge);
 
+        if (edge.getType()==null) {
+            System.out.println("ERROR: Edge '"+edge.getPrettyId()+"' has no defined Type. Edge is not correctly added to graph.");   
+        }
+        
         if (quarxsNodes.containsKey(source.getPrettyId()) && quarxsNodes.containsKey(target.getPrettyId())) {
             y.base.Edge e =
                 this.createEdge(yworksNodes.get(source.getPrettyId()), yworksNodes.get(target.getPrettyId()),
@@ -403,8 +361,7 @@ public class GraphView extends JPanel
      */
     public y.base.Node addNode(org.rogatio.quarxs.Node node)
     {
-        
-//        System.out.println(node.getPrettyId()+": "+node.getLabel());
+
         quarxsNodes.put(node.getPrettyId(), node);
 
         NodeRealizer nr = view.getGraph2D().getDefaultNodeRealizer().createCopy();
@@ -422,16 +379,7 @@ public class GraphView extends JPanel
         nr.setLabelText(node.getLabel());
         y.base.Node n = view.getGraph2D().createNode(nr);
         yworksNodes.put(node.getPrettyId(), n);
-//        System.out.println(node.getPrettyId()+": "+n);
-//        System.out.pr7intln(node.getPrettyId()+": "+view.getGraph2D().getRealizer(n).getLabelText());
-        
-//        System.out.println("No of Y-Nodes: "+view.getGraph2D().nodes().size());
-//        for (NodeCursor nc = view.getGraph2D().nodes(); nc.ok(); nc.next()) {
-////            System.out.println(nc.node().toString()+": x="+view.getGraph2D().getRealizer(nc.node()).getCenterX()+", y="+view.getGraph2D().getRealizer(nc.node()).getCenterY());
-//            
-////            System.out.println(getYNode(node));
-//        }
-        
+
         this.addNodeType(node.getType());
         return n;
     }
@@ -468,8 +416,6 @@ public class GraphView extends JPanel
         int offsetX = canvasWidth / 2 - view.getGraph2D().getBoundingBox().width / 2;
         int offsetY =
             (int) arrowType.getArrowLength() / 2 + canvasHeight / 2 - view.getGraph2D().getBoundingBox().height / 2;
-        // int offsetY = (int)height / 2 -
-        // view.getGraph2D().getBoundingBox().height / 2;
 
         // Create Javascript
         StringBuilder sb = new StringBuilder();
@@ -518,45 +464,9 @@ public class GraphView extends JPanel
             sb.append(getJsString(n));
         }
 
-        // sb.append("  document.getElementById(\"canvasImg\").href = canvas.toDataURL();\n");
-        
-//        sb.append("  document.getElementById(\"graphBar04\").innerHTML=\"<form><button title='Add Edge \"+tempSource+\" to \"+tempTarget+\"' type='submit' name='createedge' value='\"+tempSourceId+\", \"+tempTargetId+\"'><img src='../../../resources/icons/silk/"
-//          + ICON_CREATEEDGE + "' alt='Create Edge'></button></form>\";\n");
-        
         sb.append("  </script>\n");
         sb.append("{{/html}}\n");
-        
-//        sb.append("{{groovy}}\n");
-//        sb.append("import org.rogatio.quarxs.Node;\n");
-//        sb.append("String masterId = doc.getObject(\"QuarXs.NodeClass\").getProperty(\"prettyid\").value\n");
-//        sb.append("println(\"{{html}}\n\")\n");
-//        sb.append("println(\"<form name=\"edgeForm\">\n\")\n");
-//        sb.append("println(\"<select name=\"createedge\">\n\")\n");
-//        sb.append("for (Node node: services.component.getComponentManager().getInstanceList(Node.class)) {\n");
-//        sb.append("println(\"<option value=\"\"+masterId+\", \"+node.getPrettyId()+\"\"> \"+node.getLabel()+\"</option>\n\")\n");
-//        sb.append("}\n");
-//        sb.append("println(\"</select>\n\")\n");
-//        sb.append("println(\"<button id=\"add\" type=\"submit\">Add</button>\n\")\n");
-//        sb.append("println(\"</form>\n\")\n");
-//        sb.append("println(\"{{/html}}\n\")\n");
-//        sb.append("{{/groovy}}\n");
-        // sb.append("{{velocity}}\n"+
-        // "{{/velocity}}\n");
 
-//        JFrame frame = new JFrame("Graph");
-//        int h = 240;
-//        int w = 320;
-//        frame.setMinimumSize(new Dimension(w, h));
-//        frame.setPreferredSize(new Dimension(w, h));
-//        ((JFrame) frame).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.add(view);
-//        frame.setVisible(true);
-//        System.out.println("No of Y-Nodes: "+view.getGraph2D().nodes().size());
-//        for (NodeCursor nc = view.getGraph2D().nodes(); nc.ok(); nc.next()) {
-//            System.out.println(view.getGraph2D().getRealizer(nc.node()).getLabelText());
-//            System.out.println(nc.node().toString()+": x="+view.getGraph2D().getRealizer(nc.node()).getCenterX()+", y="+view.getGraph2D().getRealizer(nc.node()).getCenterY());
-//        }
-        
         return sb.toString();
     }
 
@@ -588,6 +498,8 @@ public class GraphView extends JPanel
     private static final String ICON_CREATE = "shape_square_add.png";
 
     private static final String ICON_CREATEEDGE = "link_add.png";
+    
+    private static final String ICON_DATA = "database.png";
 
     // private static final String ICON_NOEDIT = "control_stop_blue.png";
     private static final String ICON_LAYOUT = "layout_content.png";
@@ -606,9 +518,6 @@ public class GraphView extends JPanel
         canvasWidth = (int) (view.getGraph2D().getBoundingBox().width * 1.5);
         canvasHeight = (int) (view.getGraph2D().getBoundingBox().height * 1.5);
 
-        // System.out.println("Width="+canvasWidth);
-        // System.out.println("Height="+canvasHeight);
-
         StringBuilder sb = new StringBuilder();
         // Create Menubar
         sb.append("  <table id=\"graphMenu\" width=\""
@@ -619,23 +528,21 @@ public class GraphView extends JPanel
             + "' alt='No Edit'></button></form></td><td id=\"graphBar02\"><form><button type='submit' disabled><img src='../../../resources/icons/silk/"
             + ICON_DELETE
             + "' alt='No Delete'></button></form></td><td id=\"graphBar03\"><form><button type='submit' disabled><img src='../../../resources/icons/silk/"
-            + ICON_CREATE + "' alt='No Create'></button></form></td>"
+            + ICON_CREATE
+            + "' alt='No Create'></button></form></td>"
             + "<td style=\"white-space:nowrap;\" id=\"graphBar04\"><form><button type='submit' disabled><img src='../../../resources/icons/silk/"
             + ICON_CREATEEDGE + "' alt='No Create'></button></form></td>"
+            + "<td style=\"white-space:nowrap;\" id=\"graphBar05\"><form><button type='submit' disabled><img src='../../../resources/icons/silk/"
+            + ICON_DATA + "' alt='No Create'></button></form></td>"
             + "<td style=\"white-space:nowrap;\" id=\"layoutSelect\"><form><select name=\"layout\">");
 
         for (String layout : layouts.keySet()) {
             sb.append("<option value=\"" + layout + "\">" + layout + "</option>");
         }
         sb.append("</select><button title='Set Layout' type='submit'><img src='../../../resources/icons/silk/"
-            + ICON_LAYOUT + "' alt='Layout'></button></form></td>" +
-            // "<td><form><button type=\"submit\" name=\"action\" value=\"delete\"><img src=\"../../../resources/icons/silk/"+ICON_DELETE+"\" alt=\"Delete\"></button></form></td>"+
-            // +
-            // "<td id=\"graphBar02\"><a id=\"canvasImg\"><img src=\"../../../resources/icons/silk/"
-            // + ICON_SAVE + "\" title=\"Save Graph\"></a></td>" +
-            "<td width=\"100%\">&nbsp;</td></tr><tr><td width=\"100%\" colspan=\"6\" id=\"infoBar\"></td>" + "</tr></table>\n");
-        // Space below Menubar
-        // sb.append("  <p id=\"edgeInfo\"></p>\n");
+            + ICON_LAYOUT + "' alt='Layout'></button></form></td>"
+            + "<td width=\"100%\">&nbsp;</td></tr><tr><td width=\"100%\" colspan=\"7\" id=\"infoBar\">&nbsp;</td>"
+            + "</tr></table>\n");
         // Create Canvas
         sb.append("  <div style=\"overflow: scroll; width: " + width + "px; height: " + height
             + "px; border:1px solid #c3c3c3;\" id=\"graphContainer\">\n");
@@ -644,16 +551,10 @@ public class GraphView extends JPanel
         sb.append("      Your browser does not support the HTML5 canvas tag.\n");
         sb.append("    </canvas>\n");
         sb.append("  </div>\n");
-        // Create undertitle of Canvas
-        // sb.append("  <p id=\"prettyId\"></p>\n");
         // get canvas to set mouse listener
         sb.append("  <script>\n");
         sb.append("    var canvas=document.getElementById(\"graphCanvas" + uuid.toString() + "\");\n");
         sb.append("    var ctx=canvas.getContext(\"2d\");\n");
-//        sb.append("    var tempSource = \"\";\n");
-//        sb.append("    var tempSourceId = \"\";\n");
-//        sb.append("    var tempTarget = \"\";\n");
-//        sb.append("    var tempTargetId = \"\";\n");
         sb.append("    canvas.addEventListener('mousedown', mouseAction, false);\n");
         sb.append("    canvas.addEventListener('dblclick', mouseClickAction, false);\n");
         sb.append("    // Mouse Action for Selection\n");
@@ -666,9 +567,8 @@ public class GraphView extends JPanel
             + ICON_DELETE + "' alt='No Delete'></button></form>\";\n");
         sb.append("       document.getElementById(\"graphBar03\").innerHTML=\"<form><button type='submit' disabled><img src='../../../resources/icons/silk/"
             + ICON_CREATE + "' alt='No Create'></button></form>\";\n");
-//        sb.append("       document.getElementById(\"graphBar04\").innerHTML=\"<form><button type='submit' disabled><img src='../../../resources/icons/silk/"
-//            + ICON_CREATEEDGE + "' alt='No Create'></button></form>\";\n");
-        // sb.append("       document.getElementById(\"prettyId\").innerHTML=\"\";\n");
+        sb.append("       document.getElementById(\"graphBar05\").innerHTML=\"<form><button type='submit' disabled><img src='../../../resources/icons/silk/"
+            + ICON_DATA + "' alt='No Create'></button></form>\";\n");
         sb.append("       document.getElementById(\"infoBar\").innerHTML=\"&nbsp;\";\n");
 
         int offsetX = canvasWidth / 2 - view.getGraph2D().getBoundingBox().width / 2;
@@ -700,12 +600,9 @@ public class GraphView extends JPanel
                 + "'><img src='../../../resources/icons/silk/" + ICON_DELETE + "' alt='Delete'></button></form>\";\n");
             sb.append("         document.getElementById(\"graphBar03\").innerHTML=\"<form><button title='Add Node' type='submit' name='createnode' value='node'><img src='../../../resources/icons/silk/"
                 + ICON_CREATE + "' alt='Create Node'></button></form>\";\n");
-//            sb.append("         tempSource = tempTarget;\n");
-//            sb.append("         tempSourceId = tempTargetId;\n");
-//            sb.append("         tempTarget = \"" + n.getLabel() + "\";\n");
-//            sb.append("         tempTargetId = \"" + n.getPrettyId() + "\";\n");
-//            sb.append("         document.getElementById(\"graphBar04\").innerHTML=\"<form><button title='Add Edge \"+tempSource+\" to \"+tempTarget+\"' type='submit' name='createedge' value='\"+tempSourceId+\", \"+tempTargetId+\"'><img src='../../../resources/icons/silk/"
-//                + ICON_CREATEEDGE + "' alt='Create Edge'></button></form>\";\n");
+            sb.append("         document.getElementById(\"graphBar05\").innerHTML=\"<form><button title='Show Data' type='submit' name='showdata' value='" + n.getPrettyId()
+                + "'><img src='../../../resources/icons/silk/"
+                + ICON_DATA + "' alt='Show Data'></button></form>\";\n");
             sb.append("       }\n");
         }
         for (org.rogatio.quarxs.Edge e : getEdges()) {
@@ -727,10 +624,6 @@ public class GraphView extends JPanel
                     + "?editor=object'><button type='submit'><img src='../../../resources/icons/silk/"
                     + ICON_EDITEDGE
                     + "' alt='Edit" + e.getLabel() + "'></button></form>\";\n");
-                // sb.append("         document.getElementById(\"graphBar01\").innerHTML=\"<a href='../../../bin/edit/"
-                // + space + "/" + wiki + "?editor=object'><img src='../../../resources/icons/silk/"
-                // + ICON_EDITEDGE + "' title='Edit " + e.getLabel() + "'></a>\";\n");
-                // sb.append("         document.getElementById(\"prettyId\").innerHTML=\"" + e.getPrettyId() + "\";\n");
                 sb.append("         document.getElementById(\"graphBar02\").innerHTML=\"<form><button title='Delete Edge "
                     + e.getLabel()
                     + "' type='submit' name='deleteedge' value='"
@@ -738,6 +631,9 @@ public class GraphView extends JPanel
                     + "'><img src='../../../resources/icons/silk/"
                     + ICON_DELETEEDGE
                     + "' alt='Delete'></button></form>\";\n");
+                sb.append("         document.getElementById(\"graphBar05\").innerHTML=\"<form><button title='Show Data' type='submit' name='showdata' value='" + e.getPrettyId()
+                    + "'><img src='../../../resources/icons/silk/"
+                    + ICON_DATA + "' alt='Show Data'></button></form>\";\n");
                 sb.append("         document.getElementById(\"infoBar\").innerHTML=\"<b>" + e.getSource().getLabel()
                     + "</b> " + e.getLabel() + " <b>" + e.getTarget().getLabel() + "</b>\";\n");
                 sb.append("       }\n");
@@ -747,8 +643,6 @@ public class GraphView extends JPanel
         sb.append("    }\n");
         sb.append("    // Action for Doubleclick on Node\n");
         sb.append("    function mouseClickAction(mouseEvent) {\n");
-        // sb.append("       var mouseX = mouseEvent.pageX-canvas.offsetLeft;\n");
-        // sb.append("       var mouseY = mouseEvent.pageY-canvas.offsetTop;\n");
         sb.append("       var mouseX = mouseEvent.pageX-canvas.offsetLeft + document.getElementById(\"graphContainer\").scrollLeft;\n");
         sb.append("       var mouseY = mouseEvent.pageY-canvas.offsetTop + document.getElementById(\"graphContainer\").scrollTop;\n");
         for (org.rogatio.quarxs.Node n : this.getNodes()) {
@@ -819,11 +713,6 @@ public class GraphView extends JPanel
      */
     public boolean contains(NodeType nodeType)
     {
-
-        // if (nodeType==null) {
-        // return false;
-        // }
-
         for (NodeType nt : nodeTypes) {
             if (nt.getPrettyId().equals(nodeType.getPrettyId())) {
                 return true;
@@ -858,12 +747,13 @@ public class GraphView extends JPanel
 
         StringBuilder script = new StringBuilder();
 
-        // boolean enableImageCheck = false;
         script.append("    // Generated Drawing of Node '" + label + "'\n");
 
         if (n.getType() != null) {
             if (!n.getType().hasIcon()) {
                 // If no Icon is found then draw grey box
+                script.append("    ctx.strokeStyle = \""+masterNode.getType().getColor()+"\";\n");
+                script.append("    ctx.lineWidth = "+masterNode.getType().getWidth()+";\n");
                 script.append("    ctx.fillStyle = \"grey\";\n");
                 script.append("    ctx.beginPath();\n");
                 script.append("    ctx.arc(" + (offsetX + getCoordinateCenter(node).x) + ","
@@ -892,8 +782,11 @@ public class GraphView extends JPanel
 
         if (masterNode != null) {
             if (n.getPrettyId().equals(masterNode.getPrettyId())) {
-                script.append("    ctx.strokeStyle = \"orange\";\n");
-                script.append("    ctx.lineWidth = 3;\n");
+//                System.out.println(masterNode.getLabel());
+//                System.out.println(masterNode.getType());
+//                System.out.println(masterNode.getType().getColor());
+                script.append("    ctx.strokeStyle = \""+masterNode.getType().getColor()+"\";\n");
+                script.append("    ctx.lineWidth = "+masterNode.getType().getWidth()+";\n");
                 script.append("    ctx.beginPath();\n");
                 script.append("    ctx.arc(" + (offsetX + getCoordinateCenter(node).x) + ","
                     + (offsetY + getCoordinateCenter(node).y) + "," + nodeSize * zoomFactor / 2 + 2
@@ -937,43 +830,52 @@ public class GraphView extends JPanel
             return "";
         }
 
-        // System.out.println(e);
-        // System.out.println(e.getType());
-        String edgeType = e.getType().getConnection();
+        if (e.getType()==null) {
+//            System.err.println("ERROR: Edge '"+e.getPrettyId()+"' has no Type defined.");
+            return "";
+        }
+        
+        String edgeTypeConnection = e.getType().getConnection();
         StringBuilder sb = new StringBuilder();
-        sb.append("    // Generated Drawing of Edge '" + e.getLabel() + "'\n");
+        sb.append("    // Generated Drawing of Edge '"+e.getSource().getLabel()+" " + e.getLabel() +" "+ e.getTarget().getLabel()+"'\n");
 
         List<Point> points = getCoordinates(edge);
 
+        sb.append("    ctx.strokeStyle = \""+e.getType().getColor()+"\";\n");
+        sb.append("    ctx.fillStyle = \""+e.getType().getColor()+"\";\n");
+        sb.append("    ctx.lineWidth="+e.getType().getWidth()+";\n");
+        
         // calculates Offset which centers Graph
         int offsetX = canvasWidth / 2 - view.getGraph2D().getBoundingBox().width / 2;
         int offsetY =
             (int) arrowType.getArrowLength() / 2 + canvasHeight / 2 - view.getGraph2D().getBoundingBox().height / 2;
 
-        if (edgeType.equals("Bidirectional") || edgeType.equals("Unidirectional")) {
-            
-            if (points.size()==0) {
-                System.out.println("ERROR: Points of Edge '"+e.getLabel()+"' are unknown!");
+        if (edgeTypeConnection.equals("Bidirectional") || edgeTypeConnection.equals("Unidirectional")) {
+
+            if (points.size() == 0) {
+                System.out.println("ERROR: Points of Edge '" + e.getLabel() + "' are unknown!");
                 return "";
             }
-            
+
             // draw End-Arrow
             Point p0 = points.get(points.size() - 2);
             Point p1 = points.get(points.size() - 1);
             sb.append(this.getJsArrow(p0, p1));
         }
 
-        if (edgeType.equals("Bidirectional")) {
+        if (edgeTypeConnection.equals("Bidirectional")) {
             // draw Start-Arrow
             Point p0 = points.get(1);
             Point p1 = points.get(0);
             sb.append(this.getJsArrow(p0, p1));
         }
 
-        if (edgeType.equals("Related")) {
+        if (edgeTypeConnection.equals("Related")) {
             // do nothing specific
         }
 
+        sb.append("    ctx.beginPath();\n");
+        
         // draw Lines from Edge
         for (int i = 0; i < points.size(); i++) {
             if ((i + 1) < points.size()) {
@@ -986,7 +888,7 @@ public class GraphView extends JPanel
         }
 
         sb.append("    ctx.textBaseline = 'middle';\n");
-        sb.append("    ctx.fillStyle = \"black\";\n");
+//        sb.append("    ctx.fillStyle = \"black\";\n");
         sb.append("    ctx.font=\"" + fontSize + "px Arial\";\n");
         sb.append("    ctx.fillText(\"" + e.getLabel() + "\"," + (offsetX + getLabelPosition(edge).x) + ","
             + (offsetY + getLabelPosition(edge).y) + ");\n");
@@ -1051,8 +953,6 @@ public class GraphView extends JPanel
                     list.add(neigbour);
                 }
             }
-
-            // list.add(edge);
         }
 
         return list;
@@ -1178,8 +1078,6 @@ public class GraphView extends JPanel
 
     /**
      * Action to Fit Graph to given View
-     * 
-     * @author Matthias
      */
     private class ZoomAll implements ActionListener
     {
@@ -1210,8 +1108,6 @@ public class GraphView extends JPanel
 
     /**
      * Action to Zoom into graph
-     * 
-     * @author Matthias
      */
     private class ZoomIn implements ActionListener
     {
@@ -1233,8 +1129,6 @@ public class GraphView extends JPanel
 
     /**
      * Zoom Graph with Magnifier
-     * 
-     * @author Matthias
      */
     private class ZoomMagnifier implements ActionListener
     {
@@ -1254,7 +1148,7 @@ public class GraphView extends JPanel
         {
 
             boolean hasMagnifier = false;
-            Iterator it = _view.getViewModes();
+            Iterator<?> it = _view.getViewModes();
             while (it.hasNext()) {
                 ViewMode vm = (ViewMode) it.next();
                 if (vm.getName().equals("NAVIGATION_MAGNIFIER")) {
@@ -1275,8 +1169,6 @@ public class GraphView extends JPanel
 
     /**
      * Action to zoom out of graph in given view
-     * 
-     * @author Matthias
      */
     private class ZoomOut implements ActionListener
     {
@@ -1298,8 +1190,6 @@ public class GraphView extends JPanel
 
     /**
      * Zoom selected nodes and edges into given view
-     * 
-     * @author Matthias
      */
     private class ZoomSelection implements ActionListener
     {
@@ -1362,34 +1252,12 @@ public class GraphView extends JPanel
 
     public void calculate(String layoutName)
     {
-//        System.out.println("Do Layout: "+layoutName);
         GraphLayout layout = layouts.get(layoutName);
         layout.calculate(view.getGraph2D());
         view.fitContent();
         view.updateView();
         zoomFactor = view.getZoom();
     }
-
-    // public void calculate(String layoutName, Hashtable<String, String>
-    // options) {
-    // // HierarchicLayoutModule layout = new HierarchicLayoutModule();
-    // // layout.setMorphingEnabled(false);
-    //
-    // GraphLayout layout = layouts.get(layoutName);
-    //
-    // // if (options != null) {
-    // // Enumeration<String> e = options.keys();
-    // // while (e.hasMoreElements()) {
-    // // String key = (String) e.nextElement();
-    // // String option = options.get(key);
-    // // layout.getOptionHandler().set(key, option);
-    // // }
-    // // }
-    // // layout.start(view.getGraph2D());
-    // view.fitContent();
-    // view.updateView();
-    // zoomFactor = view.getZoom();
-    // }
 
     private double zoomFactor = 1.0;
 
