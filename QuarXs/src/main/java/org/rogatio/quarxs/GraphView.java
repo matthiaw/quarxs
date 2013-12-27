@@ -541,8 +541,9 @@ public class GraphView extends JPanel
         }
         sb.append("</select><button title='Set Layout' type='submit'><img src='../../../resources/icons/silk/"
             + ICON_LAYOUT + "' alt='Layout'></button></form></td>"
-            + "<td width=\"100%\">&nbsp;</td></tr><tr><td width=\"100%\" colspan=\"7\" id=\"infoBar\">&nbsp;</td>"
-            + "</tr></table>\n");
+            + "<td width=\"100%\">&nbsp;</td></tr>"
+//            + "<tr><td width=\"100%\" colspan=\"7\" id=\"infoBar\">&nbsp;</td></tr>"
+            + "</table>\n");
         // Create Canvas
         sb.append("  <div style=\"overflow: scroll; width: " + width + "px; height: " + height
             + "px; border:1px solid #c3c3c3;\" id=\"graphContainer\">\n");
@@ -569,7 +570,7 @@ public class GraphView extends JPanel
             + ICON_CREATE + "' alt='No Create'></button></form>\";\n");
         sb.append("       document.getElementById(\"graphBar05\").innerHTML=\"<form><button type='submit' disabled><img src='../../../resources/icons/silk/"
             + ICON_DATA + "' alt='No Create'></button></form>\";\n");
-        sb.append("       document.getElementById(\"infoBar\").innerHTML=\"&nbsp;\";\n");
+//        sb.append("       document.getElementById(\"infoBar\").innerHTML=\"&nbsp;\";\n");
 
         int offsetX = canvasWidth / 2 - view.getGraph2D().getBoundingBox().width / 2;
         int offsetY = canvasHeight / 2 - view.getGraph2D().getBoundingBox().height / 2;
@@ -584,6 +585,7 @@ public class GraphView extends JPanel
             StringTokenizer st = new StringTokenizer(n.getPrettyId(), ".");
             String space = st.nextToken();
             String wiki = st.nextToken();
+            sb.append("         document.getElementById(\"dataBar\").innerHTML=\"&nbsp;\";\n");
             sb.append("         document.getElementById(\"infoBar\").innerHTML=\"<b>" + n.getLabel() + "</b>\";\n");
             sb.append("         document.getElementById(\"graphBar01\").innerHTML=\"<form method='get' action='../../../bin/edit/"
                 + space
@@ -634,6 +636,7 @@ public class GraphView extends JPanel
                 sb.append("         document.getElementById(\"graphBar05\").innerHTML=\"<form><button title='Show Data' type='submit' name='showdata' value='" + e.getPrettyId()
                     + "'><img src='../../../resources/icons/silk/"
                     + ICON_DATA + "' alt='Show Data'></button></form>\";\n");
+                sb.append("         document.getElementById(\"dataBar\").innerHTML=\"&nbsp;\";\n");
                 sb.append("         document.getElementById(\"infoBar\").innerHTML=\"<b>" + e.getSource().getLabel()
                     + "</b> " + e.getLabel() + " <b>" + e.getTarget().getLabel() + "</b>\";\n");
                 sb.append("       }\n");
