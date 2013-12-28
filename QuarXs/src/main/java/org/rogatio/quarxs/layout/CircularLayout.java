@@ -11,6 +11,7 @@ public class CircularLayout implements GraphLayout {
 
 	public void calculate(Graph2D graph) {
 		CircularLayoutModule layout = new CircularLayoutModule();
+		layout.getOptionHandler().addBool("HANDLE_NODE_LABELS", true);
 		layout.setMorphingEnabled(false);
 		layout.start(graph);
 	}

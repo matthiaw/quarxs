@@ -259,6 +259,13 @@ public class GraphMacro extends AbstractMacro<GraphMacroParameters>
             contentBuilder.append("      </table>\n");
             contentBuilder.append("      </td></tr></table>\n");
             contentBuilder.append("     {{/html}}\n");
+            contentBuilder.append("    #else\n");
+            contentBuilder.append("     {{html}}\n");
+            contentBuilder.append("       <table width=\""+width+"\">\n");
+            contentBuilder.append("         <tr><td width=\"100%\" colspan=\"2\" id=\"infoBar\">&nbsp;</td></tr>\n");
+            contentBuilder.append("         <tr><td width=\"100%\" colspan=\"2\" id=\"dataBar\">&nbsp;</td></tr>\n");
+            contentBuilder.append("       </table>\n");
+            contentBuilder.append("     {{/html}}\n");
             contentBuilder.append("    #end\n");
             // contentBuilder.append("   ## DATA\n");
             // contentBuilder.append("   #if (\"true\"==\"$showData\")\n");
