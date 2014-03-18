@@ -164,29 +164,7 @@ public class GraphMacro extends AbstractMacro<GraphMacroParameters>
             contentBuilder.append("   ## PARAMETER\n");
             contentBuilder.append("   #set($defaultLayout=\"" + layout + "\")\n");
             contentBuilder.append("   #set($width=" + width + ")\n");
-            contentBuilder.append("   #set($height=" + height + ")\n");
-            // contentBuilder.append("   #set($showTable=\"" + showTable + "\")\n");
-            // contentBuilder.append("   #set($showData=\"" + showData + "\")\n");
-            // contentBuilder.append("   ## DATAOBJECT\n");
-            // contentBuilder
-            // .append("   #set($masterId=$doc.getObject(\"QuarXs.NodeClass\").getProperty(\"prettyid\").value)\n");
-            // contentBuilder
-            // .append("   #set($masterType=$doc.getObject(\"QuarXs.NodeClass\").getProperty(\"nodetype\").value)\n");
-            // contentBuilder.append("   #set($typeDocName = $masterType.substring(0, $masterType.lastIndexOf(\".\")))\n");
-            // contentBuilder
-            // .append("   #set($typeName = $masterType.substring($masterType.lastIndexOf(\".\"), $masterType.indexOf(\"(\")).replace(\".\", \"\").trim())\n");
-            // contentBuilder.append("   #set($typeDoc = $xwiki.getDocument($typeDocName))\n");
-            // contentBuilder.append("   #set($typeObj = \"\")\n");
-            // contentBuilder.append("   #set($dataEnt = \"\")\n");
-            // contentBuilder.append("   #set($data = \"\")\n");
-            // contentBuilder.append("   #foreach($type in $typeDoc.getObjects(\"QuarXs.NodeTypeClass\"))\n");
-            // contentBuilder.append("     #if ($type.get(\"name\").equals(\"$typeName\"))\n");
-            // contentBuilder.append("       #set($typeObj = $type)\n");
-            // contentBuilder.append("       #set($dataEnt = $typeObj.get(\"entity\"))\n");
-            // contentBuilder.append("       #set($data = $doc.getObject($dataEnt))\n");
-            // contentBuilder.append("     #end\n");
-            // contentBuilder.append("   #end\n");
-            
+            contentBuilder.append("   #set($height=" + height + ")\n");            
             contentBuilder.append("   ## ACTION: SET AND FILTER GRAPH\n");
             contentBuilder
                 .append("   #set($masterId=$doc.getObject(\"QuarXs.NodeClass\").getProperty(\"prettyid\").value)\n");
@@ -267,35 +245,6 @@ public class GraphMacro extends AbstractMacro<GraphMacroParameters>
             contentBuilder.append("       </table>\n");
             contentBuilder.append("     {{/html}}\n");
             contentBuilder.append("    #end\n");
-            // contentBuilder.append("   ## DATA\n");
-            // contentBuilder.append("   #if (\"true\"==\"$showData\")\n");
-            // contentBuilder.append("     #set($check = \"$!data\")\n");
-            // contentBuilder.append("     #if(!$check.equals(\"\"))\n");
-            // contentBuilder.append("   	  |=Property|=Value\n");
-            // contentBuilder.append("   	  #foreach($prop in $data.getPropertyNames())\n");
-            // contentBuilder.append("   	    |$prop|$data.get($prop)\n");
-            // contentBuilder.append("   	  #end\n");
-            // contentBuilder.append("   	#end\n");
-            // contentBuilder.append("   #end\n");
-            // contentBuilder.append("   ## LIVETABLE\n");
-            // contentBuilder.append("   #if (\"true\"==\"$showTable\")\n");
-            // contentBuilder.append("     #set($columns = [\"doc.name\", \"label\", \"doc.author\", \"_actions\"])\n");
-            // contentBuilder.append("     #set($columnsProperties = {\n");
-            // contentBuilder.append("      \"doc.name\": {\"type\":\"text\",\"size\":10,\"link\":\"view\"},\n");
-            // contentBuilder.append("      \"label\" : { \"type\" : \"text\" , \"size\" : 20, \"link\" : \"view\"},\n");
-            // contentBuilder.append("      \"doc.author\": {\"type\":\"text\",\"size\":10,\"link\":\"author\"},\n");
-            // contentBuilder.append("      \"_actions\": {\"sortable\":false,\"filterable\":false,\"html\":true,\"actions\":[\"edit\",\"delete\"]}\n");
-            // contentBuilder.append("     })\n");
-            // contentBuilder.append("     #set($options = {\n");
-            // contentBuilder.append("       \"className\" : \"QuarXs.NodeClass\",\n");
-            // contentBuilder.append("       \"translationPrefix\" : \"\",\n");
-            // contentBuilder.append("       \"tagCloud\" : true,\n");
-            // contentBuilder.append("       \"rowCount\" : 10,\n");
-            // contentBuilder.append("       \"selectedColumn\": \"doc.name\",\n");
-            // contentBuilder.append("       \"defaultOrder\": \"asc\"\n");
-            // contentBuilder.append("     })\n");
-            // contentBuilder.append("     #livetable(\"nodetable\" $columns $columnsProperties $options)\n");
-            // contentBuilder.append("   #end\n");
         } else {
             contentBuilder.append(content);
         }
